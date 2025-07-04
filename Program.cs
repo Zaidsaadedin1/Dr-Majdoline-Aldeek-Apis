@@ -94,9 +94,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 var allowedOrigins = new[]
 {
     "http://localhost:3000",
-    "https://codemastersjo.com",
-    "https://code-masters-jo-new.vercel.app",
-    "https://dromarasad.site",
+    "https://www.majdoline.site",
     "https://*.railway.app"
 };
 
