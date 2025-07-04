@@ -12,7 +12,7 @@ namespace Dr_Majdoline_Aldee.Infrastructure
         {
         }
 
-        public DbSet<Order> Orders { get; set; }
+        public DbSet<Appointment> Appointments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

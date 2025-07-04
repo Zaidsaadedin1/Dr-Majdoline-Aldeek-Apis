@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Dr_Majdoline_Aldee.Controllers;
+using Microsoft.AspNetCore.Identity;
 
 namespace Dr_Majdoline_Aldee.Common.Entities
 {
@@ -28,6 +29,6 @@ namespace Dr_Majdoline_Aldee.Common.Entities
         public DateTime? DeletedAt { get; set; }
 
         // Navigation Properties
-        public ICollection<Order> Orders { get; set; } = new List<Order>();
+        public ICollection<Appointment> Appointments { get; set; } = new List<Appointment>();
     }
 }

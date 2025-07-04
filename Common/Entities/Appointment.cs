@@ -1,25 +1,26 @@
-﻿
+﻿using Dr_Majdoline_Aldee.Common.Enums;
+
 namespace Dr_Majdoline_Aldee.Common.Entities
 {
-    public class Order
+    public class Appointment
     {
         public int Id { get; set; }
 
-        // Contact Information
+        // Patient Information
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Phone { get; set; } = null!;
-        public string? CompanyName { get; set; }
 
-        // Project Requirements
-        public string ProjectType { get; set; } = null!;
+        // Appointment Details
         public string ServiceType { get; set; } = null!;
-        public decimal Budget { get; set; }
-        public string Timeline { get; set; } = null!;
-        public string ProjectDescription { get; set; } = null!;
-        public string? AdditionalRequirements { get; set; }
+        public DateTime PreferredDate { get; set; }
+        public string PreferredTime { get; set; } = null!;
+        public string Concerns { get; set; } = null!;
+        public string? MedicalHistory { get; set; }
+
         public bool TermsAccepted { get; set; }
+        public AppointmentStatus Status { get; set; } = AppointmentStatus.Pending;
 
         // Relationship to User
         public string? UserId { get; set; }
@@ -27,6 +28,6 @@ namespace Dr_Majdoline_Aldee.Common.Entities
 
         // Timestamps
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-
+        public DateTime? UpdatedAt { get; set; }
     }
 }
