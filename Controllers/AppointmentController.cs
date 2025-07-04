@@ -18,14 +18,14 @@ namespace Dr_Majdoline_Aldee.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetOrders()
+        public async Task<IActionResult> GetAppointments()
         {
             var orders = await _orderService.GetAllAppointmentsAsync();
             return Ok(orders);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetOrder(int id)
+        public async Task<IActionResult> GetAppointment(int id)
         {
             var order = await _orderService.GetAppointmentByIdAsync(id);
             if (order == null) return NotFound();
@@ -33,30 +33,30 @@ namespace Dr_Majdoline_Aldee.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateOrder([FromBody] CreateAppointmentDto createOrderDto)
+        public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentDto createAppointmentDto)
         {
-            var orderId = await _orderService.CreateAppointmentAsync(createOrderDto);
-            return CreatedAtAction(nameof(GetOrder), new { id = orderId }, createOrderDto);
+            var orderId = await _orderService.CreateAppointmentAsync(createAppointmentDto);
+            return CreatedAtAction(nameof(GetAppointment), new { id = orderId }, createAppointmentDto);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateOrder(int id, [FromBody] UpdateAppointmentDto updateOrderDto)
+        public async Task<IActionResult> UpdateAppointment(int id, [FromBody] UpdateAppointmentDto updateAppointmentDto)
         {
-            var updated = await _orderService.UpdateAppointmentAsync(id, updateOrderDto);
+            var updated = await _orderService.UpdateAppointmentAsync(id, updateAppointmentDto);
             if (!updated) return NotFound();
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteOrder(int id)
+        public async Task<IActionResult> DeleteAppointment(int id)
         {
             var deleted = await _orderService.DeleteAppointmentAsync(id);
             if (!deleted) return NotFound();
             return NoContent();
         }
 
-        [HttpGet("GetAllUserOrdersAsync/{id}")]
-        public async Task<IActionResult> GetAllUserOrdersAsync(string id)
+        [HttpGet("GetAllUserAppointmentAsync/{id}")]
+        public async Task<IActionResult> GetAllUserAppointmentAsync(string id)
 
         {
             var userOrders = await _orderService.GetAllUserAppointmentsAsync(id);
