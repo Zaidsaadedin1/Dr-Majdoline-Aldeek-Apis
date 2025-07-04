@@ -1,0 +1,11 @@
+﻿namespace Dr_Majdoline_Aldee.Common.Enums
+{
+    public enum EmailResponseStatus
+    {
+        Success = 1,
+        Failure = 2,
+        Unauthorized = 3,
+        InvalidRequest = 4,
+        UnknownError = 5,
+    }
+}

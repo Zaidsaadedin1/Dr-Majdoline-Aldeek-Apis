@@ -1,0 +1,6 @@
+@Dr_Majdoline_Aldee_HostAddress = http://localhost:5209
+
+GET {{Dr_Majdoline_Aldee_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
