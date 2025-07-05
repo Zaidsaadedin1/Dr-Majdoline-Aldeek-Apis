@@ -1,5 +1,7 @@
 ﻿using Dr_Majdoline_Aldee.Common.Dtos.AppointmentDtos;
 using Dr_Majdoline_Aldee.Common.Dtos.OrderDtos;
+using Dr_Majdoline_Aldee.Common.Dtos.Shared;
+using Dr_Majdoline_Aldee.Common.Dtos.UserDto;
 using Dr_Majdoline_Aldee.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,51 +18,53 @@ namespace Dr_Majdoline_Aldee.Controllers
         {
             _orderService = orderService;
         }
-
         [HttpGet]
-        public async Task<IActionResult> GetAppointments()
+        public async Task<ActionResult<GenericResponse<IEnumerable<GetAppointmentDto>>>> GetAppointments()
         {
-            var orders = await _orderService.GetAllAppointmentsAsync();
-            return Ok(orders);
+            var response = await _orderService.GetAllAppointmentsAsync();
+            return Ok(response);
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetAppointment(int id)
+        public async Task<ActionResult<GenericResponse<GetAppointmentDto>>> GetAppointment(int id)
         {
-            var order = await _orderService.GetAppointmentByIdAsync(id);
-            if (order == null) return NotFound();
-            return Ok(order);
+            var response = await _orderService.GetAppointmentByIdAsync(id);
+            if (!response.Success)
+                return NotFound(response);
+            return Ok(response);
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateAppointment([FromBody] CreateAppointmentDto createAppointmentDto)
+        public async Task<ActionResult<GenericResponse<int>>> CreateAppointment([FromBody] CreateAppointmentDto createAppointmentDto)
         {
-            var orderId = await _orderService.CreateAppointmentAsync(createAppointmentDto);
-            return CreatedAtAction(nameof(GetAppointment), new { id = orderId }, createAppointmentDto);
+            var response = await _orderService.CreateAppointmentAsync(createAppointmentDto);
+            return Ok(response);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateAppointment(int id, [FromBody] UpdateAppointmentDto updateAppointmentDto)
+        public async Task<ActionResult> UpdateAppointment(int id, [FromBody] UpdateAppointmentDto updateAppointmentDto)
         {
-            var updated = await _orderService.UpdateAppointmentAsync(id, updateAppointmentDto);
-            if (!updated) return NotFound();
+            var response = await _orderService.UpdateAppointmentAsync(id, updateAppointmentDto);
+            if (!response.Success)
+                return NotFound(response);
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteAppointment(int id)
+        public async Task<ActionResult> DeleteAppointment(int id)
         {
-            var deleted = await _orderService.DeleteAppointmentAsync(id);
-            if (!deleted) return NotFound();
+            var response = await _orderService.DeleteAppointmentAsync(id);
+            if (!response.Success)
+                return NotFound(response);
             return NoContent();
         }
 
         [HttpGet("GetAllUserAppointmentAsync/{id}")]
-        public async Task<IActionResult> GetAllUserAppointmentAsync(string id)
-
+        public async Task<ActionResult<GenericResponse<IEnumerable<GetAppointmentDto>>>> GetAllUserAppointmentAsync(string id)
         {
-            var userOrders = await _orderService.GetAllUserAppointmentsAsync(id);
-            return Ok(userOrders);
+            var response = await _orderService.GetAllUserAppointmentsAsync(id);
+            return Ok(response);
         }
+
     }
 }

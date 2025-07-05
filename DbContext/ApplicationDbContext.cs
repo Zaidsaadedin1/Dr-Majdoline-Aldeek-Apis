@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Dr_Majdoline_Aldee.Infrastructure
 {
@@ -28,6 +29,25 @@ namespace Dr_Majdoline_Aldee.Infrastructure
             modelBuilder.Entity<IdentityUserToken<string>>().ToTable("UserTokens")
                 .HasKey(token => new { token.UserId, token.LoginProvider, token.Name });
 
+            var dateTimeConverter = new ValueConverter<DateTime, DateTime>(
+               v => v.Kind == DateTimeKind.Utc ? v : DateTime.SpecifyKind(v, DateTimeKind.Utc),
+               v => DateTime.SpecifyKind(v, DateTimeKind.Utc)
+           );
+
+            modelBuilder.Entity<Appointment>()
+                .Property(a => a.PreferredDate)
+                .HasConversion(dateTimeConverter);
+
+            modelBuilder.Entity<Appointment>()
+                .Property(a => a.CreatedAt)
+                .HasConversion(dateTimeConverter);
+
+            modelBuilder.Entity<Appointment>()
+                .Property(a => a.UpdatedAt)
+                .HasConversion(
+                    v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v,
+                    v => v.HasValue ? DateTime.SpecifyKind(v.Value, DateTimeKind.Utc) : v
+                );
         }
     }
 }

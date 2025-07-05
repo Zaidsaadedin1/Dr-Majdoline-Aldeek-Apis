@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Dr_Majdoline_Aldee.Common.Dtos.AppointmentDtos;
 using Dr_Majdoline_Aldee.Common.Dtos.OrderDtos;
+using Dr_Majdoline_Aldee.Common.Dtos.Shared;
 using Dr_Majdoline_Aldee.Common.Entities;
 using Dr_Majdoline_Aldee.Infrastructure;
 using Dr_Majdoline_Aldee.Interfaces;
@@ -19,65 +20,111 @@ namespace Dr_Majdoline_Aldee.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GetAppointmentDto>> GetAllAppointmentsAsync()
+        public async Task<GenericResponse<IEnumerable<GetAppointmentDto>>> GetAllAppointmentsAsync()
         {
-            var orders = await _context.Appointments.ToListAsync();
-            return _mapper.Map<IEnumerable<GetAppointmentDto>>(orders);
+            var appointments = await _context.Appointments.ToListAsync();
+            var data = _mapper.Map<IEnumerable<GetAppointmentDto>>(appointments);
+            return new GenericResponse<IEnumerable<GetAppointmentDto>>
+            {
+                Success = true,
+                Data = data
+            };
         }
 
-        public async Task<IEnumerable<GetAppointmentDto>> GetAllUserAppointmentsAsync(string userId)
+        public async Task<GenericResponse<IEnumerable<GetAppointmentDto>>> GetAllUserAppointmentsAsync(string userId)
         {
-            var orders = await _context.Appointments
-            .Where(o => o.UserId != null && o.UserId == userId)
-            .ToListAsync();
+            var appointments = await _context.Appointments
+                .Where(o => o.UserId == userId)
+                .ToListAsync();
 
-            return _mapper.Map<IEnumerable<GetAppointmentDto>>(orders);
+            var data = _mapper.Map<IEnumerable<GetAppointmentDto>>(appointments);
+
+            return new GenericResponse<IEnumerable<GetAppointmentDto>>
+            {
+                Success = true,
+                Data = data
+            };
         }
 
-        public async Task<GetAppointmentDto> GetAppointmentByIdAsync(int id)
+        public async Task<GenericResponse<GetAppointmentDto>> GetAppointmentByIdAsync(int id)
         {
-            var order = await _context.Appointments
-                .FirstOrDefaultAsync(o => o.Id == id);
+            var appointment = await _context.Appointments.FirstOrDefaultAsync(o => o.Id == id);
+            if (appointment == null)
+            {
+                return new GenericResponse<GetAppointmentDto>
+                {
+                    Success = false,
+                    Message = "Appointment not found"
+                };
+            }
 
-            if (order == null) return null;
-
-            return _mapper.Map<GetAppointmentDto>(order);
+            var data = _mapper.Map<GetAppointmentDto>(appointment);
+            return new GenericResponse<GetAppointmentDto>
+            {
+                Success = true,
+                Data = data
+            };
         }
 
-        public async Task<int> CreateAppointmentAsync(CreateAppointmentDto createOrderDto)
+        public async Task<GenericResponse<int>> CreateAppointmentAsync(CreateAppointmentDto createAppointmentDto)
         {
-            var appointment = _mapper.Map<Appointment>(createOrderDto);
+            var appointment = _mapper.Map<Appointment>(createAppointmentDto);
             _context.Appointments.Add(appointment);
             await _context.SaveChangesAsync();
 
-            return appointment.Id;
+            return new GenericResponse<int>
+            {
+                Success = true,
+                Data = appointment.Id
+            };
         }
 
-        public async Task<bool> UpdateAppointmentAsync(int id, UpdateAppointmentDto updateappointmentDto)
+        public async Task<GenericResponse<bool>> UpdateAppointmentAsync(int id, UpdateAppointmentDto updateAppointmentDto)
         {
-            var order = await _context.Appointments
-                .FirstOrDefaultAsync(o => o.Id == id);
+            var appointment = await _context.Appointments.FirstOrDefaultAsync(o => o.Id == id);
+            if (appointment == null)
+            {
+                return new GenericResponse<bool>
+                {
+                    Success = false,
+                    Message = "Appointment not found",
+                    Data = false
+                };
+            }
 
-            if (order == null) return false;
-
-            _mapper.Map(updateappointmentDto, order); 
-            _context.Appointments.Update(order);
+            _mapper.Map(updateAppointmentDto, appointment);
+            _context.Appointments.Update(appointment);
             await _context.SaveChangesAsync();
 
-            return true;
+            return new GenericResponse<bool>
+            {
+                Success = true,
+                Data = true
+            };
         }
 
-        public async Task<bool> DeleteAppointmentAsync(int id)
+        public async Task<GenericResponse<bool>> DeleteAppointmentAsync(int id)
         {
-            var order = await _context.Appointments
-                .FirstOrDefaultAsync(o => o.Id == id);
+            var appointment = await _context.Appointments.FirstOrDefaultAsync(o => o.Id == id);
+            if (appointment == null)
+            {
+                return new GenericResponse<bool>
+                {
+                    Success = false,
+                    Message = "Appointment not found",
+                    Data = false
+                };
+            }
 
-            if (order == null) return false;
-
-            _context.Appointments.Remove(order);
+            _context.Appointments.Remove(appointment);
             await _context.SaveChangesAsync();
 
-            return true;
+            return new GenericResponse<bool>
+            {
+                Success = true,
+                Data = true
+            };
         }
+
     }
 }

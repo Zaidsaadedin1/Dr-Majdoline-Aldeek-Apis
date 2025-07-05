@@ -25,7 +25,7 @@ namespace Dr_Majdoline_Aldee.Common.Entities
 
         // Timestamps
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
-        public DateTime? UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; } 
         public DateTime? DeletedAt { get; set; }
 
         // Navigation Properties
