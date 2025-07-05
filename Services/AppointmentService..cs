@@ -20,16 +20,21 @@ namespace Dr_Majdoline_Aldee.Services
             _mapper = mapper;
         }
 
-        public async Task<GenericResponse<IEnumerable<GetAppointmentDto>>> GetAllAppointmentsAsync()
+        public async Task<GenericResponse<IEnumerable<GetAppointmentForAdminDto>>> GetAllAppointmentsAsync()
         {
-            var appointments = await _context.Appointments.ToListAsync();
-            var data = _mapper.Map<IEnumerable<GetAppointmentDto>>(appointments);
-            return new GenericResponse<IEnumerable<GetAppointmentDto>>
+            var appointments = await _context.Appointments
+                .Include(a => a.User) // Include related user data
+                .ToListAsync();
+
+            var data = _mapper.Map<IEnumerable<GetAppointmentForAdminDto>>(appointments);
+
+            return new GenericResponse<IEnumerable<GetAppointmentForAdminDto>>
             {
                 Success = true,
                 Data = data
             };
         }
+
 
         public async Task<GenericResponse<IEnumerable<GetAppointmentDto>>> GetAllUserAppointmentsAsync(string userId)
         {

@@ -19,7 +19,7 @@ namespace Dr_Majdoline_Aldee.Controllers
             _orderService = orderService;
         }
         [HttpGet]
-        public async Task<ActionResult<GenericResponse<IEnumerable<GetAppointmentDto>>>> GetAppointments()
+        public async Task<ActionResult<GenericResponse<IEnumerable<GetAppointmentForAdminDto>>>> GetAppointments()
         {
             var response = await _orderService.GetAllAppointmentsAsync();
             return Ok(response);

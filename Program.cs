@@ -93,6 +93,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 // CORS Configuration
 var allowedOrigins = new[]
 {
+    "http://localhost:3000",
     "https://www.majdoline.site",
     "https://*.railway.app"
 };
